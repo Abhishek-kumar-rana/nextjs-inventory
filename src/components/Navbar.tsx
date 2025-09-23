@@ -105,7 +105,9 @@ async function Navbar() {
                         {`Hello, ${userProfile?.name.split(" ")[0]}`}
                         </span>
                     )}
-                    <div className=" h-[1px] bg-black/40 dark:bg-white/40 w-full "></div>
+                    {userProfile?.name && (
+                       <div className=" h-[1px] bg-black/40 dark:bg-white/40 w-full "></div>
+                    )}
                     
                 </div>
                 {user ? (
