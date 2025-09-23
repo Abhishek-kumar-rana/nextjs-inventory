@@ -24,13 +24,24 @@ interface InventoryTableProps {
   plants: Plants;
 }
 
+type PlantInput ={
+  id?: string;
+  name: string;
+  description?: string;
+  category: string;
+  stock: number;
+  price: number;
+  userId: string;
+  imageUrl?: string;
+}
+
 export default function InventoryTable({ plants }: InventoryTableProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
   const filteredPlants = plants?.userPlants?.filter(
-    (plant) =>
+    (plant:PlantInput) =>
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === "" || plant.category === selectedCategory)
   );
@@ -110,7 +121,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredPlants?.map((plant) => {
+            {filteredPlants?.map((plant:PlantInput) => {
               const slugifiedName = plant.name
                 .toLowerCase()
                 .replace(/\s+/g, "-");
@@ -134,7 +145,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
                   >
                     <div className="flex justify-end space-x-4">
                       <EditDialog plant={plant} />
-                      <DeleteDialog plant={plant} />
+                      <DeleteDialog plant={{id:plant.id!}} />
                     </div>
                   </TableCell>
                 </TableRow>
