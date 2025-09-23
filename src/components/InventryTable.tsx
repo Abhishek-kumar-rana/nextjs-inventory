@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "./ui/input";
-import { Search } from "lucide-react";  // ✅ fixed
+import { Search } from "lucide-react";
 import { Combobox } from "./ui/combo-box";
 import { useState } from "react";
 import { getPlants } from "@/actions/plant.action";
@@ -24,155 +24,125 @@ interface InventoryTableProps {
   plants: Plants;
 }
 
-interface Plant {
-  id: string;
-  name: string;
-  category: string;
-  price: string;
-  stock: number;
-}
-
-export default function InventoryTable({ plants }: InventoryTableProps) { // ✅ fixed name
+export default function InventoryTable({ plants }: InventoryTableProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
-  // if(plants?.userPlants?.length === 0) {
-  //   return <div className=" text-center font-bold text-lg mt-10 ">No plants available. Please add some plants.</div>
-  // }
-const filteredPlants = plants?.userPlants?.filter(
+  const filteredPlants = plants?.userPlants?.filter(
     (plant) =>
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === "" || plant.category === selectedCategory)
   );
 
-  // if(filteredPlants?.length === 0) {
-  //   return <div className=" text-center font-bold text-lg mt-10 ">No plants found.</div>
-  // }
-  
-  const router=useRouter();
-
   if (!plants) {
     return (
       <div className="w-full space-y-4">
-        <div className="flex items-center gap-2 py-4">
+        <div className="flex flex-col sm:flex-row items-center gap-2 py-4">
           <Skeleton className="h-10 w-full max-w-sm" />
           <Skeleton className="h-10 w-32" />
           <Skeleton className="h-10 w-32" />
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>
-                <Skeleton className="w-full h-4" />
-              </TableHead>
-              <TableHead>
-                <Skeleton className="w-full h-4" />
-              </TableHead>
-              <TableHead>
-                <Skeleton className="w-full h-4" />
-              </TableHead>
-              <TableHead>
-                <Skeleton className="w-full h-4" />
-              </TableHead>
-              <TableHead>
-                <Skeleton className="w-full h-4" />
-              </TableHead>
-              <TableHead className="text-right">
-                <Skeleton className="w-full h-4" />
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <Skeleton className="w-full h-4" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="w-full h-4" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="w-full h-4" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="w-full h-4" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="w-full h-4" />
-                </TableCell>
-                <TableCell className="text-right">
-                  <Skeleton className="w-full h-4" />
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <TableHead key={i}>
+                    <Skeleton className="w-full h-4" />
+                  </TableHead>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 6 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <Skeleton className="w-full h-4" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     );
   }
 
-
   return (
-    <>
-      <div className="w-full">
-        <div className="flex items-center gap-2 py-4">
-          <div className="relative max-w-sm w-full"> {/* ✅ fixed */}
-            <Input
-              type="text"
-              placeholder="Search plants..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Search className="absolute h-4 w-3 left-3 top-1/2 -translate-y-1/2 transform" />
-          </div>
-          <Combobox
-            value={selectedCategory}
-            onChange={(val) => setSelectedCategory(val)}
+    <div className="w-full">
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-col items-center gap-2 py-4">
+        <div className="relative w-full ">
+          <Input
+            type="text"
+            placeholder="Search plants..."
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-           <CreateDialog />
-          
+          <Search className="absolute h-4 w-4 left-3 top-1/2 -translate-y-1/2 transform text-muted-foreground" />
         </div>
 
-      
+        <div className="flex w-full justify-between gap-2">
+          <Combobox  
+          value={selectedCategory}
+          onChange={(val) => setSelectedCategory(val)}
+        />
 
-
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Plant ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Stock</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredPlants?.map((plant) => {
-             const slugifiedName = plant.name.toLowerCase().replace(/\s+/g, "-");
-            const slug = `${plant.id}--${slugifiedName}`;
-            const plantUrl = `/plants/${slug}`;
-            return(
-            <TableRow key={plant.id} onClick={()=> router.push(plantUrl)} >
-              <TableCell className="font-medium">{plant.id}</TableCell>
-              <TableCell>{plant.name}</TableCell>
-              <TableCell>{plant.category}</TableCell>
-              <TableCell>{plant.price}</TableCell>
-              <TableCell className="font-bold">{plant.stock}</TableCell>
-              <TableCell className="text-right">
-                <div className=" flex justify-end space-x-4" onClick={e=> e.stopPropagation()}>
-                  <EditDialog plant={plant} />
-                  {/* <h1 className=" border rounded-sm bg-red-800 px-2">Delete</h1> */}
-                  <DeleteDialog plant={plant} />
-                </div>
-              </TableCell>
-            </TableRow>
-          )})}
-        </TableBody>
-      </Table>
+        <CreateDialog  />
+        </div>
       </div>
-    </>
+
+      {/* Table - scrollable on mobile */}
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {/* <TableHead>Plant ID</TableHead> */}
+              <TableHead>Name</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredPlants?.map((plant) => {
+              const slugifiedName = plant.name
+                .toLowerCase()
+                .replace(/\s+/g, "-");
+              const slug = `${plant.id}--${slugifiedName}`;
+              const plantUrl = `/plants/${slug}`;
+
+              return (
+                <TableRow
+                  key={plant.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => router.push(plantUrl)}
+                >
+                  {/* <TableCell className="font-medium">{plant.id}</TableCell> */}
+                  <TableCell>{plant.name}</TableCell>
+                  <TableCell>{plant.category}</TableCell>
+                  <TableCell>{plant.price}</TableCell>
+                  <TableCell className="font-bold">{plant.stock}</TableCell>
+                  <TableCell
+                    className="text-right"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex justify-end space-x-4">
+                      <EditDialog plant={plant} />
+                      <DeleteDialog plant={plant} />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 }

@@ -28,7 +28,7 @@ export default function PlantCard({ plant }: PlantCardProps) {
 
   return (
     <Card className="max-w">
-      <div className="flex flex-row">
+      <div className="flex flex-col md:flex-col lg:flex-row">
         <div className="basis-2/4">
           <CardHeader>
           {plant.imageUrl && (

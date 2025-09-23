@@ -7,7 +7,19 @@
     text-wrap: balance;
   }
 }
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
+
+.mono-display {
+  font-family: 'Major Mono Display', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Stalinist+One&display=swap');
+.stalinist-one-regular {
+  font-family: "Stalinist One", sans-serif;
+ 
+}
 
 
 @layer base {

@@ -17,7 +17,7 @@ import { Input } from "./ui/input";
 import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { createPlant } from "@/actions/plant.action";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 import ImageUpload from "./ImageUpload";
 
 export default function CreateDialog() {
@@ -52,17 +52,14 @@ export default function CreateDialog() {
       <AlertDialogTrigger asChild>
         <Button
           variant="default"
-          className="ml-auto font-bold flex items-center gap-2"
-          asChild
-
+          className="ml-auto font-bold flex items-center gap-2 cursor-pointer"
         >
-          <span>
-            <Sprout className="w-4 h-4" />
-            Add Plant
-          </span>
+          <Sprout className="w-4 h-4" />
+          Add Plant
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+
+      <AlertDialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>Add a Plant</AlertDialogTitle>
           <AlertDialogDescription>
@@ -70,8 +67,9 @@ export default function CreateDialog() {
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name + Category */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="name">Name</Label>
               <Input
@@ -90,15 +88,21 @@ export default function CreateDialog() {
               />
             </div>
           </div>
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            placeholder="Type your message here."
-            rows={5}
-            value={formData.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-          />
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Description */}
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              placeholder="Type your message here."
+              rows={5}
+              value={formData.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+            />
+          </div>
+
+          {/* Stock + Price */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="stock">Stock</Label>
               <Input
@@ -121,18 +125,19 @@ export default function CreateDialog() {
             </div>
           </div>
 
-          {/*Image Upload*/}
-          <div className="py-5">
-          <ImageUpload
-            endpoint="postImage"
-            value={formData.imageUrl}
-            onChange={(url) => {
-              handleChange("imageUrl", url);
-            }}
-          />
+          {/* Image Upload */}
+          <div className="py-2">
+            <Label>Image</Label>
+            <ImageUpload
+              endpoint="postImage"
+              value={formData.imageUrl}
+              onChange={(url) => {
+                handleChange("imageUrl", url);
+              }}
+            />
           </div>
-          
 
+          {/* Actions */}
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction type="submit">Submit</AlertDialogAction>
