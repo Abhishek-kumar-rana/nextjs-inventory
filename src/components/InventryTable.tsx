@@ -100,48 +100,59 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
 
       {/* Table - scrollable on mobile */}
       <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredPlants?.map((plant: Plants) => {
-              const slugifiedName = plant.name
-                .toLowerCase()
-                .replace(/\s+/g, "-");
-              const slug = `${plant.id}--${slugifiedName}`;
-              const plantUrl = `/plants/${slug}`;
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {filteredPlants?.map((plant: Plants) => {
+    const slugifiedName = plant.name.toLowerCase().replace(/\s+/g, "-");
+    const slug = `${plant.id}--${slugifiedName}`;
+    const plantUrl = `/plants/${slug}`;
 
-              return (
-                <TableRow
-                  key={plant.id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => router.push(plantUrl)}
-                >
-                  <TableCell>{plant.name}</TableCell>
-                  <TableCell>{plant.category}</TableCell>
-                  <TableCell>{plant.price}</TableCell>
-                  <TableCell className="font-bold">{plant.stock}</TableCell>
-                  <TableCell
-                    className="text-right"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div className="flex justify-end space-x-4">
-                      <EditDialog plant={plant} />
-                      <DeleteDialog plant={{ id: plant.id }} />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+    return (
+        <div
+          key={plant.id}
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex flex-col justify-between cursor-pointer hover:shadow-lg transition"
+          onClick={() => router.push(plantUrl)}
+        >
+          {/* Plant Image */}
+          <div className="h-40 w-full bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            {plant.imageUrl ? (
+              <img
+                src={plant.imageUrl}
+                alt={plant.name}
+                className="h-full w-full object-cover rounded-lg"
+              />
+            ) : (
+              <span className="text-green-900 font-semibold text-lg">
+                No Image
+              </span>
+            )}
+          </div>
+
+          {/* Plant Info */}
+          <div className="flex-1">
+            <h2 className="text-lg font-bold text-green-700 dark:text-green-400">
+              {plant.name}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Category: {plant.category}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Price: ${plant.price.toFixed(2)}
+            </p>
+            <p className="text-sm font-semibold text-green-600">
+              Stock: {plant.stock}
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-4 flex justify-between gap-2" onClick={(e) => e.stopPropagation()}>
+            <EditDialog plant={plant} />
+            <DeleteDialog plant={{ id: plant.id }} />
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
       </div>
     </div>
   );
