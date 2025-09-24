@@ -46,11 +46,11 @@ export default function PlantCard({ plant }: PlantCardProps) {
         </div>
         <div className="basis-2/4 flex flex-col justify-between">
           <CardContent className="mt-8 space-y-3">
-            <CardTitle className="text-5xl font-bold">{plant.name}</CardTitle>
-            <CardTitle className="text-3xl font-bold">${plant.price}</CardTitle>
+            <CardTitle className="text-3xl lg:text-5xl font-bold">{plant.name}</CardTitle>
+            <CardTitle className=" text-2xl lg:text-3xl font-bold">${plant.price}</CardTitle>
             <Badge>{plant.category}</Badge>
             <CardDescription>Stock: {plant.stock}</CardDescription>
-            <CardDescription className="text-white">
+            <CardDescription className="">
               {plant.description}
             </CardDescription>
           </CardContent>
