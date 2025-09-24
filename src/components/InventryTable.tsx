@@ -18,7 +18,7 @@ import { Skeleton } from "./ui/skeleton";
 import CreateDialog from "./CreateDialog";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDiaglog";
-import type { Plants } from "@prisma/client"; // ✅ use Prisma type directly
+import type { Plants } from "@prisma/client"; // ✅ match your schema
 
 type PlantsResult = Awaited<ReturnType<typeof getPlants>>;
 
@@ -31,7 +31,6 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
-  // ✅ TS now infers `plant` is of type Plants
   const filteredPlants = plants?.userPlants?.filter(
     (plant) =>
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
