@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   TableBody,
@@ -17,14 +18,12 @@ import { Skeleton } from "./ui/skeleton";
 import CreateDialog from "./CreateDialog";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDiaglog";
+import type { Plants } from "@prisma/client"; // ✅ use Prisma type directly
 
-// ✅ Use Prisma generated type
-import type { Plants } from "@prisma/client";
-
-type PlantsResponse = Awaited<ReturnType<typeof getPlants>>;
+type PlantsResult = Awaited<ReturnType<typeof getPlants>>;
 
 interface InventoryTableProps {
-  plants: PlantsResponse;
+  plants: PlantsResult;
 }
 
 export default function InventoryTable({ plants }: InventoryTableProps) {
@@ -32,14 +31,13 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
-  // ✅ Filter plants with Prisma's Plants type
+  // ✅ TS now infers `plant` is of type Plants
   const filteredPlants = plants?.userPlants?.filter(
-    (plant: Plants) =>
+    (plant) =>
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === "" || plant.category === selectedCategory)
   );
 
-  // ✅ Skeleton state while loading
   if (!plants) {
     return (
       <div className="w-full space-y-4">
@@ -80,7 +78,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
     <div className="w-full">
       {/* Filters */}
       <div className="flex flex-col sm:flex-col items-center gap-2 py-4">
-        <div className="relative w-full">
+        <div className="relative w-full ">
           <Input
             type="text"
             placeholder="Search plants..."
@@ -96,6 +94,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
             value={selectedCategory}
             onChange={(val) => setSelectedCategory(val)}
           />
+
           <CreateDialog />
         </div>
       </div>
@@ -105,7 +104,6 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              {/* <TableHead>Plant ID</TableHead> */}
               <TableHead>Name</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Price</TableHead>
@@ -127,14 +125,13 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
                   className="cursor-pointer hover:bg-muted/50"
                   onClick={() => router.push(plantUrl)}
                 >
-                  {/* <TableCell className="font-medium">{plant.id}</TableCell> */}
                   <TableCell>{plant.name}</TableCell>
                   <TableCell>{plant.category}</TableCell>
                   <TableCell>{plant.price}</TableCell>
                   <TableCell className="font-bold">{plant.stock}</TableCell>
                   <TableCell
                     className="text-right"
-                    onClick={(e) => e.stopPropagation()} // Prevent row navigation
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex justify-end space-x-4">
                       <EditDialog plant={plant} />
