@@ -18,21 +18,13 @@ import CreateDialog from "./CreateDialog";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDiaglog";
 
-type Plants = Awaited<ReturnType<typeof getPlants>>;
+// ✅ Use Prisma generated type
+import type { Plants } from "@prisma/client";
+
+type PlantsResponse = Awaited<ReturnType<typeof getPlants>>;
 
 interface InventoryTableProps {
-  plants: Plants;
-}
-
-type PlantInput ={
-  id?: string;
-  name: string;
-  description?: string;
-  category: string;
-  stock: number;
-  price: number;
-  userId: string;
-  imageUrl?: string;
+  plants: PlantsResponse;
 }
 
 export default function InventoryTable({ plants }: InventoryTableProps) {
@@ -40,12 +32,14 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
 
+  // ✅ Filter plants with Prisma's Plants type
   const filteredPlants = plants?.userPlants?.filter(
-    (plant:PlantInput) =>
+    (plant: Plants) =>
       plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedCategory === "" || plant.category === selectedCategory)
   );
 
+  // ✅ Skeleton state while loading
   if (!plants) {
     return (
       <div className="w-full space-y-4">
@@ -86,7 +80,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
     <div className="w-full">
       {/* Filters */}
       <div className="flex flex-col sm:flex-col items-center gap-2 py-4">
-        <div className="relative w-full ">
+        <div className="relative w-full">
           <Input
             type="text"
             placeholder="Search plants..."
@@ -98,12 +92,11 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
         </div>
 
         <div className="flex w-full justify-between gap-2">
-          <Combobox  
-          value={selectedCategory}
-          onChange={(val) => setSelectedCategory(val)}
-        />
-
-        <CreateDialog  />
+          <Combobox
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val)}
+          />
+          <CreateDialog />
         </div>
       </div>
 
@@ -121,7 +114,7 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredPlants?.map((plant:PlantInput) => {
+            {filteredPlants?.map((plant: Plants) => {
               const slugifiedName = plant.name
                 .toLowerCase()
                 .replace(/\s+/g, "-");
@@ -141,11 +134,11 @@ export default function InventoryTable({ plants }: InventoryTableProps) {
                   <TableCell className="font-bold">{plant.stock}</TableCell>
                   <TableCell
                     className="text-right"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()} // Prevent row navigation
                   >
                     <div className="flex justify-end space-x-4">
                       <EditDialog plant={plant} />
-                      <DeleteDialog plant={{id:plant.id!}} />
+                      <DeleteDialog plant={{ id: plant.id }} />
                     </div>
                   </TableCell>
                 </TableRow>
