@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
-import { Prisma } from "@prisma/client";
+
 
 export async function getPlants(searchTerm?: string) {
   try {
