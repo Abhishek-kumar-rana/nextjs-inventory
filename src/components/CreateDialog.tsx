@@ -41,6 +41,14 @@ export default function CreateDialog() {
       const newPlant = await createPlant(formData);
       console.log("plant created: ", newPlant);
       toast.success("Plant created successfully");
+
+
+      //for vibrate
+        if (typeof window !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(80);
+    }
+
+      
     } catch (error) {
       console.error("error creating plant", error);
       toast.error("Failed to create plant");
