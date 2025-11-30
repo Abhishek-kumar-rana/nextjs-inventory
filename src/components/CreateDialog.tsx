@@ -45,7 +45,7 @@ export default function CreateDialog() {
 
       //for vibrate
         if (typeof window !== "undefined" && navigator.vibrate) {
-      navigator.vibrate(80);
+      navigator.vibrate(880);
     }
 
       
